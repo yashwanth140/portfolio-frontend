@@ -1,0 +1,122 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}My Portfolio{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="nav-container">
+    <div class="logo">My Portfolio</div>
+    <div class="nav-links">
+      <a href="/about">About</a>
+      <a href="/education">Education</a>
+      <a href="/experience">Experience</a>
+      <a href="/projects">Projects</a>
+      <a href="/contact">Contact</a>
+      <a href="/resume">Resume</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<div class="content">
+  {% block content %}{% endblock %}
+</div>
+
+<!-- Chatbot -->
+<div class="chat-container">
+  <div class="chat-box" id="chat-box">
+    <p class="bot-message"><strong>Bot:</strong> 👋 Hello! I’m your portfolio assistant. Feel free to ask me about my projects, skills, or education! <span class="timestamp" id="init-time"></span></p>
+  </div>
+
+  <div class="input-area">
+    <input type="text" id="chat-input" placeholder="Type your message..." />
+    <button id="send-button" onclick="sendMessage()">Send</button>
+    <div class="spinner" id="spinner"></div>
+  </div>
+</div>
+
+<!-- Chat Script -->
+<script>
+  async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const button = document.getElementById('send-button');
+    const box = document.getElementById('chat-box');
+    const spinner = document.getElementById('spinner');
+    const message = input.value.trim();
+    
+    if (!message) return;
+  
+    const now = new Date();
+    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+    box.innerHTML += `<p class="user-message"><strong>You:</strong> ${message} <span class="timestamp">${time}</span></p>`;
+    input.value = '';
+  
+    // Disable input and show spinner
+    input.disabled = true;
+    button.disabled = true;
+    spinner.style.display = 'inline-block';
+  
+    // Add Bot Typing bubble
+    const typingBubble = document.createElement('p');
+    typingBubble.className = 'bot-typing';
+    typingBubble.innerHTML = `<strong>Bot:</strong> Typing...`;
+    box.appendChild(typingBubble);
+  
+    scrollChatToBottom();
+  
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+  
+      const data = await res.json();
+  
+      // Remove "Bot is typing..." bubble
+      box.removeChild(typingBubble);
+  
+      if (data && data.reply) {
+        box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> ${data.reply} <span class="timestamp">${time}</span></p>`;
+      } else {
+        box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Sorry, couldn't understand. <span class="timestamp">${time}</span></p>`;
+      }
+  
+    } catch (err) {
+      console.error('Error:', err);
+  
+      box.removeChild(typingBubble);
+      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Server error, please try again later. <span class="timestamp">${time}</span></p>`;
+    } finally {
+      input.disabled = false;
+      button.disabled = false;
+      spinner.style.display = 'none';
+      input.focus();
+      scrollChatToBottom();
+    }
+  }
+  
+  function scrollChatToBottom() {
+    const box = document.getElementById('chat-box');
+    box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
+  }
+  
+  // Set initial timestamp
+  document.addEventListener("DOMContentLoaded", function() {
+    const now = new Date();
+    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('init-time').innerText = time;
+  });
+  </script>
+  
+
+</body>
+</html>

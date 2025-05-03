@@ -1,0 +1,22 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Home | My Portfolio{% endblock %}
+
+{% block content %}
+<main>
+  <section class="hero">
+    <h1>Hello, I'm [Your Name] 👋</h1>
+    <p>A passionate full-stack developer with a knack for solving real-world problems through code.</p>
+    <div class="hero-buttons">
+      <a href="/projects" class="btn">💼 View My Work</a>
+      <a href="/resume" class="btn">📄 Download Resume</a>
+    </div>
+  </section>
+
+  <section class="quick-summary">
+    <h2>🔧 Technologies</h2>
+    <p>React · Node.js · Flask · MySQL · HTML/CSS · Python · Git · AWS</p>
+  </section>
+</main>
+{% endblock %}
