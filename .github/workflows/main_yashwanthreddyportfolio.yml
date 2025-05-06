@@ -3,7 +3,7 @@
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
 
-name: Build and deploy Python app to Azure Web App - yashwanthreddyportfolio
+name: Deploy Flask App to Azure Web App
 
 on:
   push:
@@ -12,16 +12,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
@@ -32,43 +29,16 @@ jobs:
           source venv/bin/activate
           pip install -r requirements.txt
 
-      - name: Zip application
-        run: zip -r release.zip . -x "venv/*"
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-app
-          path: release.zip
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-    permissions:
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: python-app
-
-      - name: Unzip package
-        run: unzip release.zip
-
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8473094930944CF68056D40D461BFE26 }}  
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8473094930944CF68056D40D461BFE26 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_04958B2BDF0D43E186201D6EE77F7E1C }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_39AF66A1E4B447E0BC4544D20BFB1958 }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'yashwanthreddyportfolio'
-          slot-name: 'Production'
+          app-name: yashwanthreddyportfolio
+          slot-name: Production
           package: .
