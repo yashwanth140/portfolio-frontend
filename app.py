@@ -37,7 +37,7 @@ def chat_proxy():
     user_input = request.json.get("message")
     try:
         vm_response = requests.post(
-            "http://<YOUR_VM_IP>:5000/api/chat",  # Replace this
+            "http://13.91.84.145:5000/api/chat",  # Replace this
             json={"message": user_input},
             timeout=10
         )
