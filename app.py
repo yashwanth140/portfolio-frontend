@@ -31,15 +31,16 @@ def contact():
 def resume():
     return render_template('resume.html')
 
-# ---------- Chatbot Proxy (Frontend → VM Backend) ----------
+# ---------- Chatbot Proxy (Frontend → VM Backend over HTTPS) ----------
 @app.route('/api/chat', methods=['POST'])
 def chat_proxy():
     user_input = request.json.get("message")
     try:
         vm_response = requests.post(
-            "http://13.91.84.145:5000/api/chat",  # Replace this
+            "https://13.91.84.145/api/chat",  # Replace with domain if NGINX uses one
             json={"message": user_input},
-            timeout=10
+            timeout=10,
+            verify=False  # optional, depends on cert; remove once SSL is trusted
         )
         return jsonify(vm_response.json())
     except Exception as e:
@@ -47,5 +48,5 @@ def chat_proxy():
         return jsonify({"reply": "⚠️ Chatbot backend unavailable. Please try again later."}), 503
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # use Azure's dynamic port or default to 5000
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)

@@ -32,7 +32,7 @@
 <!-- Chatbot -->
 <div class="chat-container">
   <div class="chat-box" id="chat-box">
-    <p class="bot-message"><strong>Bot:</strong> 👋 Hello! I’m your portfolio assistant. Feel free to ask me about my projects, skills, or education! <span class="timestamp" id="init-time"></span></p>
+    <p class="bot-message"><strong>Bot:</strong> 👋 Hello! I’m your portfolio assistant. Ask me about my work, education, or skills! <span class="timestamp" id="init-time"></span></p>
   </div>
 
   <div class="input-area">
@@ -44,7 +44,7 @@
 
 <!-- Chat Script -->
 <script>
-  const BACKEND_URL = "http://13.91.84.145:5000/api/chat";  // Azure VM endpoint
+  const BACKEND_URL = "https://13.91.84.145/api/chat";
 
   async function sendMessage() {
     const input = document.getElementById('chat-input');
@@ -52,7 +52,7 @@
     const box = document.getElementById('chat-box');
     const spinner = document.getElementById('spinner');
     const message = input.value.trim();
-    
+
     if (!message) return;
 
     const now = new Date();
@@ -60,7 +60,6 @@
 
     box.innerHTML += `<p class="user-message"><strong>You:</strong> ${message} <span class="timestamp">${time}</span></p>`;
     input.value = '';
-
     input.disabled = true;
     button.disabled = true;
     spinner.style.display = 'inline-block';
