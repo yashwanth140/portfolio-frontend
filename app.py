@@ -1,5 +1,5 @@
 # Frontend/app.py
-
+import os
 from flask import Flask, render_template, request, jsonify
 import requests
 
@@ -47,4 +47,5 @@ def chat_proxy():
         return jsonify({"reply": "⚠️ Chatbot backend unavailable. Please try again later."}), 503
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # use Azure's dynamic port or default to 5000
+    app.run(host="0.0.0.0", port=port)
