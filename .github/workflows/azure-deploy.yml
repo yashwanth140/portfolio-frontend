@@ -73,4 +73,4 @@ jobs:
         with:
           app-name: yashwanthreddyportfolio
           slot-name: Production
-          package: .
+          package: ./Frontend
