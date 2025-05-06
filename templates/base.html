@@ -44,6 +44,8 @@
 
 <!-- Chat Script -->
 <script>
+  const BACKEND_URL = "http://13.91.84.145:5000/api/chat";  // Azure VM endpoint
+
   async function sendMessage() {
     const input = document.getElementById('chat-input');
     const button = document.getElementById('send-button');
@@ -52,49 +54,43 @@
     const message = input.value.trim();
     
     if (!message) return;
-  
+
     const now = new Date();
     const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  
+
     box.innerHTML += `<p class="user-message"><strong>You:</strong> ${message} <span class="timestamp">${time}</span></p>`;
     input.value = '';
-  
-    // Disable input and show spinner
+
     input.disabled = true;
     button.disabled = true;
     spinner.style.display = 'inline-block';
-  
-    // Add Bot Typing bubble
+
     const typingBubble = document.createElement('p');
     typingBubble.className = 'bot-typing';
     typingBubble.innerHTML = `<strong>Bot:</strong> Typing...`;
     box.appendChild(typingBubble);
-  
     scrollChatToBottom();
-  
+
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(BACKEND_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message })
       });
-  
+
       const data = await res.json();
-  
-      // Remove "Bot is typing..." bubble
       box.removeChild(typingBubble);
-  
+
       if (data && data.reply) {
         box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> ${data.reply} <span class="timestamp">${time}</span></p>`;
       } else {
-        box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Sorry, couldn't understand. <span class="timestamp">${time}</span></p>`;
+        box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Sorry, I didn’t understand. <span class="timestamp">${time}</span></p>`;
       }
-  
+
     } catch (err) {
       console.error('Error:', err);
-  
       box.removeChild(typingBubble);
-      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Server error, please try again later. <span class="timestamp">${time}</span></p>`;
+      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> ⚠️ Chatbot backend unavailable. Please try again later. <span class="timestamp">${time}</span></p>`;
     } finally {
       input.disabled = false;
       button.disabled = false;
@@ -103,20 +99,18 @@
       scrollChatToBottom();
     }
   }
-  
+
   function scrollChatToBottom() {
     const box = document.getElementById('chat-box');
     box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
   }
-  
-  // Set initial timestamp
+
   document.addEventListener("DOMContentLoaded", function() {
     const now = new Date();
     const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     document.getElementById('init-time').innerText = time;
   });
-  </script>
-  
+</script>
 
 </body>
 </html>
