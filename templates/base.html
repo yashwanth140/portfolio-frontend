@@ -1,4 +1,3 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +43,7 @@
 
 <!-- Chat Script -->
 <script>
-  const BACKEND_URL = "https://13.91.84.145/api/chat";
+  const BACKEND_URL = "/api/chat";  // this goes through Flask proxy
 
   async function sendMessage() {
     const input = document.getElementById('chat-input');

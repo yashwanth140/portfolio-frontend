@@ -1,4 +1,3 @@
-# Frontend/app.py
 import os
 from flask import Flask, render_template, request, jsonify
 import requests
@@ -31,16 +30,15 @@ def contact():
 def resume():
     return render_template('resume.html')
 
-# ---------- Chatbot Proxy (Frontend → VM Backend over HTTPS) ----------
+# ---------- Chatbot Proxy (Frontend → VM Backend via NGINX) ----------
 @app.route('/api/chat', methods=['POST'])
 def chat_proxy():
     user_input = request.json.get("message")
     try:
         vm_response = requests.post(
-            "https://13.91.84.145/api/chat",  # Replace with domain if NGINX uses one
+            "http://13.91.84.145/api/chat",  # ← HTTP through NGINX reverse proxy
             json={"message": user_input},
-            timeout=10,
-            verify=False  # optional, depends on cert; remove once SSL is trusted
+            timeout=10
         )
         return jsonify(vm_response.json())
     except Exception as e:
