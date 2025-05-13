@@ -43,7 +43,7 @@
 
 <!-- Chat Script -->
 <script>
-  const BACKEND_URL = "http://13.91.84.145:5000/api/chat";  // this goes through Flask proxy
+  const BACKEND_URL = "https://yashwanthreddyportfolio.me/api/chat";  //Use the HTTPS Backend
 
   async function sendMessage() {
     const input = document.getElementById('chat-input');
@@ -88,7 +88,7 @@
     } catch (err) {
       console.error('Error:', err);
       box.removeChild(typingBubble);
-      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> ⚠️ Chatbot backend unavailable. Please try again later. <span class="timestamp">${time}</span></p>`;
+      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong>  Chatbot backend unavailable. Please try again later. <span class="timestamp">${time}</span></p>`;
     } finally {
       input.disabled = false;
       button.disabled = false;
