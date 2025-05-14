@@ -36,7 +36,7 @@ def chat_proxy():
     user_input = request.json.get("message")
     try:
         vm_response = requests.post(
-            "http://13.91.84.145/api/chat",  # ← HTTP through NGINX reverse proxy
+            "https://yashwanthreddyportfolio.me/api/chat",  # ✅ FIXED: Use HTTPS + domain
             json={"message": user_input},
             timeout=10
         )
