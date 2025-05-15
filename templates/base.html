@@ -31,7 +31,10 @@
 <!-- Chatbot -->
 <div class="chat-container">
   <div class="chat-box" id="chat-box">
-    <p class="bot-message"><strong>Bot:</strong> 👋 Hello! I’m your portfolio assistant. Ask me about my work, education, or skills! <span class="timestamp" id="init-time"></span></p>
+    <p class="bot-message">
+      <strong>Bot:</strong> 👋 Hello! I’m your portfolio assistant. Ask me about my work, education, or skills!
+      <span class="timestamp" id="init-time"></span>
+    </p>
   </div>
 
   <div class="input-area">
@@ -43,7 +46,7 @@
 
 <!-- Chat Script -->
 <script>
-  const BACKEND_URL = "https://yashwanthreddyportfolio.me/api/chat";  //Use the HTTPS Backend
+  const BACKEND_URL = "https://yashwanthreddyportfolio.me/api/chat";
 
   async function sendMessage() {
     const input = document.getElementById('chat-input');
@@ -72,7 +75,11 @@
     try {
       const res = await fetch(BACKEND_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ message })
       });
 
@@ -82,13 +89,13 @@
       if (data && data.reply) {
         box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> ${data.reply} <span class="timestamp">${time}</span></p>`;
       } else {
-        box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Sorry, I didn’t understand. <span class="timestamp">${time}</span></p>`;
+        box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Sorry, I didn't understand. <span class="timestamp">${time}</span></p>`;
       }
 
     } catch (err) {
       console.error('Error:', err);
       box.removeChild(typingBubble);
-      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong>  Chatbot backend unavailable. Please try again later. <span class="timestamp">${time}</span></p>`;
+      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Chatbot backend unavailable. Please try again later. <span class="timestamp">${time}</span></p>`;
     } finally {
       input.disabled = false;
       button.disabled = false;
@@ -103,7 +110,7 @@
     box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
   }
 
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function () {
     const now = new Date();
     const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     document.getElementById('init-time').innerText = time;
