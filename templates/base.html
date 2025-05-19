@@ -23,20 +23,22 @@
   </div>
 </nav>
 
-<!-- Page Content -->
+<!-- Main Content -->
 <div class="content">
   {% block content %}{% endblock %}
 </div>
 
-<!-- Floating Chatbot -->
-<div class="chat-container floating-chat">
+<!-- Floating Chat Toggle -->
+<div id="chat-toggle" onclick="toggleChat()" title="Chat with me">💬</div>
+
+<!-- Chatbot (hidden by default) -->
+<div class="chat-container" id="chat-container" style="display: none;">
   <div class="chat-box" id="chat-box">
     <p class="bot-message">
       <strong>Bot:</strong> 👋 Hello! I’m your portfolio assistant. Ask me about my work, education, or skills!
       <span class="timestamp" id="init-time"></span>
     </p>
   </div>
-
   <div class="input-area">
     <input type="text" id="chat-input" placeholder="Type your message..." />
     <button id="send-button" onclick="sendMessage()">Send</button>
@@ -110,7 +112,12 @@
     box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+  function toggleChat() {
+    const container = document.getElementById('chat-container');
+    container.style.display = (container.style.display === 'none') ? 'block' : 'none';
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
     const now = new Date();
     const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     document.getElementById('init-time').innerText = time;

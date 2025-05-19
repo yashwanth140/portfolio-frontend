@@ -4,16 +4,17 @@
 {% block content %}
 <main>
   <h1>Resume</h1>
-  <iframe 
-    src="/static/resume/YASHWANTH_Reddy_Resume.pdf" 
-    width="100%" 
-    height="600px" 
-    style="border: none;">
-  </iframe>
-  <br>
-  <a 
-    href="/static/resume/YASHWANTH_Reddy_Resume.pdf" 
-    download 
-    class="btn-download">📄 Download Resume</a>
+  <p>You can view or download my resume below:</p>
+  <a class="btn-download" href="#" onclick="toggleResume()">📄 View Resume</a>
+  <div id="resume-viewer" style="margin-top: 20px; display: none;">
+    <iframe src="/static/resume/YASHWANTH_Reddy_Resume.pdf" width="100%" height="700px" style="border: none;"></iframe>
+  </div>
 </main>
+
+<script>
+  function toggleResume() {
+    const viewer = document.getElementById('resume-viewer');
+    viewer.style.display = viewer.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
 {% endblock %}
