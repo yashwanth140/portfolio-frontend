@@ -47,14 +47,18 @@ nav {
   box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Chat Container */
-.chat-container {
-  max-width: 600px;
-  margin: 40px auto;
+/* Floating Chatbot */
+.floating-chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  max-width: 360px;
+  width: 100%;
   background: #fff;
-  padding: 20px;
+  padding: 16px;
   border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
 }
 
 /* Chat Box */
@@ -64,12 +68,11 @@ nav {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  margin-bottom: 15px;
   background: #fafafa;
   scroll-behavior: smooth;
+  margin-bottom: 10px;
 }
 
-/* Chat Messages */
 .bot-message {
   background-color: #e3f2fd;
   padding: 10px;
@@ -90,12 +93,21 @@ nav {
   max-width: 80%;
 }
 
-/* Timestamp */
 .timestamp {
   display: block;
   font-size: 0.7em;
   color: #777;
   margin-top: 5px;
+}
+
+.bot-typing {
+  background-color: #fff3cd;
+  padding: 10px;
+  border-radius: 15px;
+  margin: 8px 0;
+  width: fit-content;
+  max-width: 80%;
+  font-style: italic;
 }
 
 /* Chat Input */
@@ -126,7 +138,6 @@ nav {
   background-color: #555;
 }
 
-/* Spinner */
 .spinner {
   display: none;
   margin-left: 10px;
@@ -143,41 +154,7 @@ nav {
   100% { transform: rotate(360deg); }
 }
 
-/* Typing animation bubble */
-.bot-typing {
-  background-color: #fff3cd;
-  padding: 10px;
-  border-radius: 15px;
-  margin: 8px 0;
-  width: fit-content;
-  max-width: 80%;
-  font-style: italic;
-}
-
-/* Mobile Responsive Fixes */
-@media (max-width: 768px) {
-  .chat-container, .content {
-    margin: 20px;
-    padding: 15px;
-    max-width: 95%;
-  }
-
-  #chat-box {
-    height: 250px;
-  }
-
-  .nav-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav-links a {
-    display: block;
-    margin: 5px 0;
-  }
-}
-
-/* ---------- About Page Styling ---------- */
+/* About Page */
 .about {
   max-width: 900px;
   margin: 60px auto;
@@ -220,7 +197,7 @@ nav {
   text-decoration: underline;
 }
 
-/* ---------- Education ---------- */
+/* Education Section */
 .section {
   margin: 40px auto;
   max-width: 900px;
@@ -252,7 +229,7 @@ nav {
   color: #888;
 }
 
-/* ---------- Experience ---------- */
+/* Experience Section */
 .experience-entry {
   margin-bottom: 40px;
   padding: 20px;
@@ -290,7 +267,7 @@ nav {
   margin-bottom: 8px;
 }
 
-/* ---------- Projects ---------- */
+/* Projects */
 .project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -338,7 +315,7 @@ nav {
   background-color: #003278;
 }
 
-/* ---------- Resume Download ---------- */
+/* Resume Download */
 .btn-download {
   display: inline-block;
   margin-top: 1rem;
@@ -353,7 +330,7 @@ nav {
   background-color: #0056b3;
 }
 
-/* ---------- Contact Page ---------- */
+/* Contact Page */
 .contact-section {
   max-width: 700px;
   margin: auto;
@@ -391,4 +368,34 @@ nav {
 
 .contact-form button:hover {
   background-color: #0056b3;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .chat-container,
+  .content {
+    margin: 20px;
+    padding: 15px;
+    max-width: 95%;
+  }
+
+  .floating-chat {
+    right: 10px;
+    left: 10px;
+    max-width: unset;
+  }
+
+  #chat-box {
+    height: 250px;
+  }
+
+  .nav-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-links a {
+    display: block;
+    margin: 5px 0;
+  }
 }
