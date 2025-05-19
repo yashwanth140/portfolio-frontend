@@ -1,13 +1,21 @@
-<!-- templates/experience.html -->
-
 {% extends "base.html" %}
 
 {% block title %}Experience{% endblock %}
 
 {% block content %}
-  <h1>Experience</h1>
-  <ul>
-    <li><strong>Job Title 1</strong> – Company Name (Year–Year)</li>
-    <li><strong>Job Title 2</strong> – Company Name (Year–Year)</li>
-  </ul>
+<div class="section">
+  <h2>Professional Experience</h2>
+
+  <div class="experience-entry">
+    <h3>Associate Software Engineer</h3>
+    <p class="company">Prolifics Corporation Limited – Hyderabad, India</p>
+    <p class="dates">Oct 2021 – Dec 2023</p>
+    <ul class="exp-details">
+      <li>Designed and implemented scalable APIs and backend systems for enterprise-level applications.</li>
+      <li>Worked on high-performance data pipelines with Kafka, PostgreSQL, and Azure Event Hubs.</li>
+      <li>Contributed to CI/CD pipelines and maintained version control with GitHub and Jenkins.</li>
+      <li>Collaborated cross-functionally with frontend developers and QA to deliver reliable releases.</li>
+    </ul>
+  </div>
+</div>
 {% endblock %}

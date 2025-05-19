@@ -3,15 +3,37 @@
 {% block title %}Projects{% endblock %}
 
 {% block content %}
-<main>
-  <h1>Projects</h1>
-  <ul>
-    <li>
-      <strong>Classroom Reservation System</strong> – A full-stack system with admin/user login, room booking, and feedback notifications. 
-      <a href="https://gentle-smoke-0be6c8610.6.azurestaticapps.net/" target="_blank">Live Demo</a> 
-      and 
-      <a href="https://github.com/yashwanth140/classroom-reservation-system" target="_blank">GitHub</a>
-    </li>
-  </ul>
-</main>
+<div class="section">
+  <h2>Projects</h2>
+
+  <div class="project-grid">
+
+    <!-- Classroom Reservation System -->
+    <div class="project-card">
+      <h3>Classroom Reservation System</h3>
+      <p>A full-stack system with admin/user login, real-time room booking, feedback notifications, and approval workflows.</p>
+      <p><strong>Tech:</strong> React.js, Node.js, Express.js, MySQL</p>
+      <a href="https://gentle-smoke-0be6c8610.6.azurestaticapps.net/" target="_blank" class="btn">Live Demo</a>
+      <a href="https://github.com/yashwanth140/classroom-reservation-system" target="_blank" class="btn">GitHub</a>
+    </div>
+
+    <!-- Portfolio Website + Chatbot -->
+    <div class="project-card">
+      <h3>AI-Powered Portfolio Website</h3>
+      <p>Personal portfolio site with a resume-trained chatbot using LangChain, FAISS, and Mistral 7B, deployed securely via Azure.</p>
+      <p><strong>Tech:</strong> Flask, LangChain, FAISS, Azure VM, NGINX</p>
+      <a href="https://yashwanthreddyportfolio.me" target="_blank" class="btn">Live Demo</a>
+      <a href="https://github.com/yashwanth140" target="_blank" class="btn">GitHub</a>
+    </div>
+
+    <!-- Kafka + Azure Event Hubs -->
+    <div class="project-card">
+      <h3>Kafka + Azure Event Hubs Streaming</h3>
+      <p>Real-time streaming pipeline for telemetry ingestion using Kafka producers and Azure Event Hubs, built with Dockerized services.</p>
+      <p><strong>Tech:</strong> Kafka, Azure Event Hubs, Docker, Python</p>
+      <a href="https://github.com/yashwanth140" target="_blank" class="btn">GitHub</a>
+    </div>
+
+  </div>
+</div>
 {% endblock %}

@@ -1,11 +1,19 @@
 {% extends "base.html" %}
-
 {% block title %}Resume{% endblock %}
 
 {% block content %}
 <main>
   <h1>Resume</h1>
-  <p>You can download my resume using the link below:</p>
-  <a href="/static/resume.pdf" target="_blank">📄 Download Resume (PDF)</a>
+  <iframe 
+    src="/static/resume/YASHWANTH_Reddy_Resume.pdf" 
+    width="100%" 
+    height="600px" 
+    style="border: none;">
+  </iframe>
+  <br>
+  <a 
+    href="/static/resume/YASHWANTH_Reddy_Resume.pdf" 
+    download 
+    class="btn-download">📄 Download Resume</a>
 </main>
 {% endblock %}
