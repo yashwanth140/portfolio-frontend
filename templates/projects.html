@@ -50,20 +50,19 @@
   </div>
 </div>
 
-<!-- Fullscreen PDF Modal -->
+<!-- PDF Modal Overlay -->
 <div id="pdfModal" class="pdf-modal">
   <div class="pdf-modal-content">
     <span class="pdf-close" onclick="closePDFModal()">&times;</span>
     <iframe 
       src="{{ url_for('static', filename='Solar-Powered-automated-mulitasking-agribot.pdf') }}" 
-      width="100%" 
-      height="100%" 
-      style="border: none;">
+      title="Agriculture Robot PDF"
+      frameborder="0">
     </iframe>
   </div>
 </div>
 
-<!-- PDF Modal Scripts -->
+<!-- Modal JavaScript -->
 <script>
   function openPDFModal() {
     document.getElementById('pdfModal').style.display = 'block';
@@ -72,5 +71,12 @@
   function closePDFModal() {
     document.getElementById('pdfModal').style.display = 'none';
   }
+
+  // Optional: Close modal with Escape key
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      closePDFModal();
+    }
+  });
 </script>
 {% endblock %}
