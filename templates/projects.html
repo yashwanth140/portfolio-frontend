@@ -35,21 +35,39 @@
 
     <!-- Solar-Powered Automated Agriculture Robot -->
 <div class="project-card">
-  <h3>Solar-Powered Automated Agriculture Robot </h3>
+  <h3>Solar-Powered Automated Agriculture Robot</h3>
   <p>Designed a multitasking agriculture robot for automated irrigation, soil sensing, and water management — powered entirely by solar energy. Integrated using Arduino and IoT for efficient, eco-friendly farming.</p>
   <p><strong>Tech:</strong> Arduino UNO, IoT Sensors, Solar Panel, L293D, Relay, Submersible Motor</p>
 
+  <!-- Robot image -->
   <img src="{{ url_for('static', filename='solar bot.jpg') }}" alt="Agriculture Robot Image"
        style="width:100%; border-radius:8px; margin-bottom:10px;" />
 
-  <iframe 
-    src="{{ url_for('static', filename='solar Powered automated multitasking agribot.pdf') }}" 
-    width="100%" 
-    height="400px" 
-    style="border:1px solid #ccc; border-radius:8px;">
-  </iframe>
+  <!-- View PDF Button -->
+  <button onclick="togglePDF()" style="margin-top: 10px;" class="btn">📄 View PDF</button>
+
+  <!-- Hidden iframe (initially hidden) -->
+  <div id="pdfContainer" style="display: none; margin-top: 10px;">
+    <iframe 
+      src="{{ url_for('static', filename='Solar-Powered-automated-mulitasking-agribot.pdf') }}"
+      width="100%" 
+      height="400px"
+      style="border:1px solid #ccc; border-radius:8px;">
+    </iframe>
+  </div>
 </div>
 
+<!-- JS Toggle Script -->
+<script>
+  function togglePDF() {
+    const pdf = document.getElementById("pdfContainer");
+    if (pdf.style.display === "none") {
+      pdf.style.display = "block";
+    } else {
+      pdf.style.display = "none";
+    }
+  }
+</script>
 
 
   </div>
