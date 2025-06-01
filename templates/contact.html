@@ -49,16 +49,16 @@ document.getElementById("contactForm").addEventListener("submit", async function
 
     if (response.ok) {
       responseMsg.style.color = "green";
-      responseMsg.textContent = "✅ Thanks for reaching out! I’ll get back to you soon.";
+      responseMsg.textContent = "Thanks for reaching out! I’ll get back to you soon.";
       document.getElementById("contactForm").reset();
     } else {
       responseMsg.style.color = "red";
-      responseMsg.textContent = "❌ Something went wrong. Please try again.";
+      responseMsg.textContent = "Something went wrong. Please try again.";
     }
   } catch (error) {
     console.error("Error sending message:", error);
     responseMsg.style.color = "red";
-    responseMsg.textContent = "❌ Network error. Try again later.";
+    responseMsg.textContent = "Network error. Try again later.";
   }
 });
 </script>
