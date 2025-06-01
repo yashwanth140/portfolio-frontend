@@ -36,7 +36,7 @@ def chat_proxy():
     user_input = request.json.get("message")
     try:
         vm_response = requests.post(
-            "https://yashwanthreddyportfolio.me/api/chat",  # ✅ FIXED: Use HTTPS + domain
+            "https://yashwanthreddyportfolio.me/api/chat",  #  Use HTTPS + domain
             json={"message": user_input},
             timeout=10
         )
