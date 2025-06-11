@@ -31,17 +31,12 @@ def resume():
     return render_template('resume.html')
 
 # ---------- Chatbot Proxy (Frontend → VM Backend via NGINX) ----------
-# ---------- Chatbot Proxy (Frontend → VM Backend via NGINX) ----------
 @app.route('/api/chat', methods=['POST'])
 def chat_proxy():
     user_input = request.json.get("message")
     try:
         # ✅ FIX: Use local backend directly (no loop)
-        vm_response = requests.post(
-            "http://127.0.0.1:5000/api/chat",  # 👈 Use local Gunicorn
-            json={"message": user_input},
-            timeout=15
-        )
+        vm_response = requests.post("https://yashwanthreddyportfolio.me/api/chat", json={"message": user_input}, timeout=15)
         return jsonify(vm_response.json())
     except Exception as e:
         print(f"[ERROR] Chat VM failed: {e}")
