@@ -6,7 +6,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 # ✅ Enable CORS ONLY for your portfolio domain
-CORS(app, origins=["https://yashwanthreddyportfolio.me"])
+CORS(app, origins=["https://yashwanthreddyportfolio.me"], supports_credentials=True)
 
 # ---------- Static Pages ----------
 @app.route('/')
