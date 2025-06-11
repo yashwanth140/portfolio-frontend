@@ -33,13 +33,21 @@ def resume():
 # ---------- Chatbot Proxy (Frontend → VM Backend via NGINX) ----------
 @app.route('/api/chat', methods=['POST'])
 def chat_proxy():
-    user_input = request.json.get("message", "").strip()
-    print(f"[MOCK] User asked: {user_input}")
-    
-    # Simulated fast test response
-    return jsonify({
-        "reply": f"✅ Test OK. You said: '{user_input}'"
-    })
+    user_input = request.json.get("message")
+    try:
+        # INTERNAL call: fast and direct
+        vm_response = requests.post(
+            "http://127.0.0.1:5000/api/chat",  # ← THIS IS KEY
+            json={"message": user_input},
+            timeout=30  # give LLM some time
+        )
+        return jsonify(vm_response.json())
+    except Exception as e:
+        print(f"[ERROR] Chat backend failed: {e}")
+        return jsonify({"reply": "⚠️ Chatbot backend unavailable. Please try again later."}), 503
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
+
