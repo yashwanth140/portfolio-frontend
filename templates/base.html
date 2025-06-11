@@ -74,35 +74,34 @@
     box.appendChild(typingBubble);
     scrollChatToBottom();
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 sec max
+
     try {
       const res = await fetch(BACKEND_URL, {
         method: 'POST',
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message }),
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
       const data = await res.json();
       box.removeChild(typingBubble);
 
       if (data && data.reply) {
         box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> ${data.reply} <span class="timestamp">${time}</span></p>`;
       } else {
-        box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Sorry, I didn't understand. <span class="timestamp">${time}</span></p>`;
+        box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Sorry, I didn’t get that. <span class="timestamp">${time}</span></p>`;
       }
-
     } catch (err) {
-      console.error('Error:', err);
+      clearTimeout(timeoutId);
       box.removeChild(typingBubble);
-      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Chatbot backend unavailable. Please try again later. <span class="timestamp">${time}</span></p>`;
+      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> ⚠️ Chatbot is taking too long or is offline. Try again later. <span class="timestamp">${time}</span></p>`;
     } finally {
       input.disabled = false;
       button.disabled = false;
       spinner.style.display = 'none';
-      input.focus();
       scrollChatToBottom();
     }
   }
@@ -123,6 +122,7 @@
     document.getElementById('init-time').innerText = time;
   });
 </script>
+
 
 </body>
 </html>
