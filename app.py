@@ -32,6 +32,7 @@ def resume():
 
 # ---------- Chatbot Proxy (Frontend → VM Backend via NGINX) ----------
 @app.route('/api/chat', methods=['POST'])
+@app.route('/chat', methods=['POST'])
 def chat_proxy():
     user_input = request.json.get("message")
     try:
