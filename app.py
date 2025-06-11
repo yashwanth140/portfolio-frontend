@@ -35,14 +35,15 @@ def resume():
 def chat_proxy():
     user_input = request.json.get("message")
     try:
+        # Forward message to chatbot backend running on the VM via NGINX + SSL
         vm_response = requests.post(
-            "https://yashwanthreddyportfolio.me/api/chat",  #  Use HTTPS + domain
+            "https://yashwanthreddyportfolio.me/api/chat",
             json={"message": user_input},
             timeout=10
         )
         return jsonify(vm_response.json())
     except Exception as e:
-        print(f"[ERROR] Chat VM failed: {e}")
+        print(f"[ERROR] Chatbot backend unreachable: {e}")
         return jsonify({"reply": "⚠️ Chatbot backend unavailable. Please try again later."}), 503
 
 if __name__ == "__main__":
