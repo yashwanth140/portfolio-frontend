@@ -31,20 +31,22 @@ def resume():
     return render_template('resume.html')
 
 # ---------- Chatbot Proxy (Frontend → VM Backend via NGINX) ----------
+# ---------- Chatbot Proxy (Frontend → VM Backend via NGINX) ----------
 @app.route('/api/chat', methods=['POST'])
 def chat_proxy():
     user_input = request.json.get("message")
     try:
-        # Forward message to chatbot backend running on the VM via NGINX + SSL
+        # ✅ FIX: Use local backend directly (no loop)
         vm_response = requests.post(
-            "https://yashwanthreddyportfolio.me/api/chat",
+            "http://127.0.0.1:5000/api/chat",  # 👈 Use local Gunicorn
             json={"message": user_input},
-            timeout=10
+            timeout=15
         )
         return jsonify(vm_response.json())
     except Exception as e:
-        print(f"[ERROR] Chatbot backend unreachable: {e}")
+        print(f"[ERROR] Chat VM failed: {e}")
         return jsonify({"reply": "⚠️ Chatbot backend unavailable. Please try again later."}), 503
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
