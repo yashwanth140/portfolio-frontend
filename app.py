@@ -43,10 +43,11 @@ def chat_proxy():
 
     try:
         vm_response = requests.post(
-            "https://13.91.84.145/api/chat",  # ✅ Replace with env var later
+            "https://13.91.84.145/api/chat",
             json={"message": user_input},
             headers={"Content-Type": "application/json"},
-            timeout=30
+            timeout=30,
+            verify=False  # 🚨 THIS BYPASSES SSL CERT CHECK (needed for IP)
         )
         vm_response.raise_for_status()
         return jsonify(vm_response.json())
@@ -54,6 +55,7 @@ def chat_proxy():
     except Exception as e:
         print(f"[ERROR] Chat backend unreachable: {e}")
         return jsonify({"reply": "⚠️ Chatbot backend unavailable. Please try again later."}), 503
+
 
 # ---------- Run Server (for local use) ----------
 if __name__ == "__main__":
