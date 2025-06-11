@@ -34,20 +34,24 @@ def resume():
 @app.route('/api/chat', methods=['POST'])
 def chat_proxy():
     user_input = request.json.get("message")
-    try:
-        # INTERNAL call: fast and direct
-        vm_response = requests.post(
-            "http://127.0.0.1:5000/api/chat",  # ← THIS IS KEY
-            json={"message": user_input},
-            timeout=30  # give LLM some time
-        )
-        return jsonify(vm_response.json())
-    except Exception as e:
-        print(f"[ERROR] Chat backend failed: {e}")
-        return jsonify({"reply": "⚠️ Chatbot backend unavailable. Please try again later."}), 503
+    if not user_input:
+        return jsonify({"reply": "⚠️ No input provided."}), 400
 
+    try:
+        # EXTERNAL call to your Azure VM chatbot backend
+        vm_response = requests.post(
+            "https://13.91.84.145/api/chat",  #  external call to VM's NGINX
+            json={"message": user_input},
+            headers={"Content-Type": "application/json"},
+            timeout=30  # allow for LLM response time
+        )
+        vm_response.raise_for_status()
+        return jsonify(vm_response.json())
+
+    except Exception as e:
+        print(f"[ERROR] Chat backend unreachable: {e}")
+        return jsonify({"reply": "⚠️ Chatbot backend unavailable. Please try again later."}), 503
+    
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-
-
