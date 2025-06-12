@@ -72,10 +72,7 @@ def chat_proxy():
             "The assistant is temporarily offline. Please try again in a few moments.",
             "I'm currently initializing. Kindly retry after a short while.",
             "The chatbot backend is waking up — thank you for your patience.",
-            "Service is temporarily unavailable. Please wait a moment and try again.",
             "The assistant is not reachable at the moment. It may be starting up.",
-            "We’re reconnecting to the AI engine — please try again shortly.",
-            "Apologies, the assistant is currently unavailable. We're working to restore access.",
             "The chatbot is powering up. This may take a few seconds — thank you for waiting.",
             "System is starting up to serve your request. Please retry shortly."
         ]
