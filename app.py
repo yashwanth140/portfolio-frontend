@@ -64,7 +64,6 @@ def chat_proxy():
         greeting_fallbacks = [
             "Hi there! The assistant is currently waking up — please try again shortly.",
             "Hello! I’m temporarily offline. Give me a moment and I’ll be ready to assist.",
-            "Hey! I’m rebooting right now — let’s chat again in a bit.",
             "Greetings! The assistant is spinning up. Try again in a few seconds."
         ]
 
