@@ -2,6 +2,8 @@ import os
 from flask import Flask, render_template, request, jsonify
 import requests
 from flask_cors import CORS
+import random
+import re
 
 app = Flask(__name__)
 
@@ -37,12 +39,12 @@ def resume():
 # ---------- Chatbot Proxy (Frontend → VM via subdomain) ----------
 @app.route('/api/chat', methods=['POST'])
 def chat_proxy():
-    user_input = request.json.get("message")
+
+    user_input = request.json.get("message", "").strip()
     if not user_input:
         return jsonify({"reply": "No input provided."}), 400
 
     try:
-        # Use subdomain with valid SSL cert (no verify=False needed)
         vm_response = requests.post(
             "https://chatbot.yashwanthreddyportfolio.me/api/chat",
             json={"message": user_input},
@@ -54,8 +56,37 @@ def chat_proxy():
 
     except Exception as e:
         print(f"[ERROR] Chat backend unreachable: {e}")
-        return jsonify({"reply": "Chatbot backend unavailable. Please try again later."}), 503
 
+        # Normalize input to detect exaggerated greetings
+        normalized_input = re.sub(r'(.)\1{2,}', r'\1', user_input.lower())
+        greetings = ["hi", "hello", "hey", "good morning", "good afternoon", "good evening"]
+
+        greeting_fallbacks = [
+            "Hi there! The assistant is currently waking up — please try again shortly.",
+            "Hello! I’m temporarily offline. Give me a moment and I’ll be ready to assist.",
+            "Hey! I’m rebooting right now — let’s chat again in a bit.",
+            "Greetings! The assistant is spinning up. Try again in a few seconds."
+        ]
+
+        professional_fallbacks = [
+            "The assistant is temporarily offline. Please try again in a few moments.",
+            "I'm currently initializing. Kindly retry after a short while.",
+            "The chatbot backend is waking up — thank you for your patience.",
+            "Service is temporarily unavailable. Please wait a moment and try again.",
+            "The assistant is not reachable at the moment. It may be starting up.",
+            "We’re reconnecting to the AI engine — please try again shortly.",
+            "Apologies, the assistant is currently unavailable. We're working to restore access.",
+            "The chatbot is powering up. This may take a few seconds — thank you for waiting.",
+            "System is starting up to serve your request. Please retry shortly."
+        ]
+
+        if any(normalized_input.startswith(greet) for greet in greetings):
+            selected_message = random.choice(greeting_fallbacks)
+        else:
+            selected_message = random.choice(professional_fallbacks)
+
+        return jsonify({"reply": selected_message}), 503
+    
 # ---------- Local Dev Runner ----------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
