@@ -48,7 +48,8 @@
 
 <!-- Chat Script -->
 <script>
-  const BACKEND_URL = "https://chatbot.yashwanthreddyportfolio.me/api/chat";
+  const BACKEND_URL = "/api/chat";
+
   async function sendMessage() {
     const input = document.getElementById('chat-input');
     const button = document.getElementById('send-button');
@@ -96,7 +97,19 @@
     } catch (err) {
       console.error('Error:', err);
       box.removeChild(typingBubble);
-      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> Chatbot backend unavailable. Please try again later. <span class="timestamp">${time}</span></p>`;
+
+      let fallbackMessage = "The assistant is currently unavailable. Please try again later.";
+
+      try {
+        const errorData = await err.response.json();
+        if (errorData && errorData.reply) {
+          fallbackMessage = errorData.reply;
+        }
+      } catch (_) {
+        // Fallback stays default
+      }
+
+      box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> ${fallbackMessage} <span class="timestamp">${time}</span></p>`;
     } finally {
       input.disabled = false;
       button.disabled = false;
