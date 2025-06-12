@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-# ✅ Enable CORS ONLY for your portfolio domain
+# ✅ Allow CORS only from your official frontend
 CORS(app, origins=["https://yashwanthreddyportfolio.me"], supports_credentials=True)
 
 # ---------- Static Pages ----------
@@ -34,30 +34,29 @@ def contact():
 def resume():
     return render_template('resume.html')
 
-# ---------- Chatbot Proxy (Frontend → VM Backend) ----------
+# ---------- Chatbot Proxy (Frontend → VM via subdomain) ----------
 @app.route('/api/chat', methods=['POST'])
 def chat_proxy():
     user_input = request.json.get("message")
     if not user_input:
-        return jsonify({"reply": "⚠️ No input provided."}), 400
+        return jsonify({"reply": "No input provided."}), 400
 
     try:
+        # Use subdomain with valid SSL cert (no verify=False needed)
         vm_response = requests.post(
-            "https://13.91.84.145/api/chat",
+            "https://chatbot.yashwanthreddyportfolio.me/api/chat",
             json={"message": user_input},
             headers={"Content-Type": "application/json"},
-            timeout=30,
-            verify=False  # 🚨 THIS BYPASSES SSL CERT CHECK (needed for IP)
+            timeout=30
         )
         vm_response.raise_for_status()
         return jsonify(vm_response.json())
 
     except Exception as e:
         print(f"[ERROR] Chat backend unreachable: {e}")
-        return jsonify({"reply": "⚠️ Chatbot backend unavailable. Please try again later."}), 503
+        return jsonify({"reply": "Chatbot backend unavailable. Please try again later."}), 503
 
-
-# ---------- Run Server (for local use) ----------
+# ---------- Local Dev Runner ----------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
