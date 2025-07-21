@@ -1,14 +1,16 @@
 import os
+import time
+import logging
 from flask import Flask, render_template, request, jsonify
 import requests
 from flask_cors import CORS
-import random
-import re
 
 app = Flask(__name__)
 
-# ✅ Allow CORS only from your official frontend
+# Allow CORS only from official frontend
 CORS(app, origins=["https://yashwanthreddyportfolio.me"], supports_credentials=True)
+
+logging.basicConfig(level=logging.INFO)
 
 # ---------- Static Pages ----------
 @app.route('/')
@@ -39,10 +41,11 @@ def resume():
 # Chatbot Proxy (Frontend → VM via subdomain) 
 @app.route('/api/chat', methods=['POST'])
 def chat_proxy():
-
     user_input = request.json.get("message", "").strip()
     if not user_input:
         return jsonify({"reply": "No input provided."}), 400
+
+    start_time = time.time()
 
     try:
         vm_response = requests.post(
@@ -51,38 +54,30 @@ def chat_proxy():
             headers={"Content-Type": "application/json"},
             timeout=180
         )
-        vm_response.raise_for_status()
-        return jsonify(vm_response.json())
+
+        logging.info(f"[DEBUG] Status code: {vm_response.status_code}")
+        logging.info(f"[DEBUG] Time taken: {time.time() - start_time:.2f}s")
+
+        # Try to return JSON regardless of status
+        try:
+            return jsonify(vm_response.json())
+        except Exception as parse_err:
+            logging.error(f"[ERROR] Could not parse JSON: {parse_err}")
+            logging.debug(f"[DEBUG] Raw backend response: {vm_response.text[:500]}")
+            return jsonify({"reply": "Backend responded with unreadable format."}), 502
+
+    except requests.exceptions.Timeout:
+        logging.error("[ERROR] Backend request timed out.")
+        return jsonify({"reply": "Chatbot backend timed out. Please try again later."}), 504
+
+    except requests.exceptions.ConnectionError:
+        logging.error("[ERROR] Backend connection failed.")
+        return jsonify({"reply": "Chatbot backend is unreachable. Please try again shortly."}), 503
 
     except Exception as e:
-        print(f"[ERROR] Chat backend unreachable: {e}")
+        logging.error(f"[ERROR] Unexpected error: {e}")
+        return jsonify({"reply": "Unexpected error occurred while processing your request."}), 500
 
-        # Normalize input to detect exaggerated greetings
-        normalized_input = re.sub(r'(.)\1{2,}', r'\1', user_input.lower())
-        greetings = ["hi", "hello", "hey", "good morning", "good afternoon", "good evening"]
-
-        greeting_fallbacks = [
-            "Hi there! The assistant is currently waking up — please try again shortly.",
-            "Hello! I’m temporarily offline. Give me a moment and I’ll be ready to assist.",
-            "Greetings! The assistant is spinning up. Try again in a few seconds."
-        ]
-
-        professional_fallbacks = [
-            "The assistant is temporarily offline. Please try again in a few moments.",
-            "I'm currently initializing. Kindly retry after a short while.",
-            "The chatbot backend is waking up — thank you for your patience.",
-            "The assistant is not reachable at the moment. It may be starting up.",
-            "The chatbot is powering up. This may take a few seconds — thank you for waiting.",
-            "System is starting up to serve your request. Please retry shortly."
-        ]
-
-        if any(normalized_input.startswith(greet) for greet in greetings):
-            selected_message = random.choice(greeting_fallbacks)
-        else:
-            selected_message = random.choice(professional_fallbacks)
-
-        return jsonify({"reply": selected_message}), 503
-    
 # ---------- Local Dev Runner ----------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
