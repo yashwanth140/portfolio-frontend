@@ -98,17 +98,7 @@
       console.error('Error:', err);
       box.removeChild(typingBubble);
 
-      let fallbackMessage = "The assistant is currently unavailable. Please try again later.";
-
-      try {
-        const errorData = await err.response.json();
-        if (errorData && errorData.reply) {
-          fallbackMessage = errorData.reply;
-        }
-      } catch (_) {
-        // Fallback stays default
-      }
-
+      const fallbackMessage = "The assistant is currently unavailable. Please try again later.";
       box.innerHTML += `<p class="bot-message"><strong>Bot:</strong> ${fallbackMessage} <span class="timestamp">${time}</span></p>`;
     } finally {
       input.disabled = false;
@@ -135,6 +125,7 @@
     document.getElementById('init-time').innerText = time;
   });
 </script>
+
 
 </body>
 </html>
