@@ -7,12 +7,13 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-# Allow CORS only from official frontend
+# Allow CORS only from your official domain
 CORS(app, origins=["https://yashwanthreddyportfolio.me"], supports_credentials=True)
 
-logging.basicConfig(level=logging.INFO)
+# Logging setup
+logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 
-# ---------- Static Pages ----------
+# Static Pages
 @app.route('/')
 @app.route('/about')
 def about():
@@ -38,47 +39,48 @@ def contact():
 def resume():
     return render_template('resume.html')
 
-# Chatbot Proxy (Frontend → VM via subdomain) 
+# Chatbot Proxy (Frontend → VM via Subdomain) 
 @app.route('/api/chat', methods=['POST'])
 def chat_proxy():
     user_input = request.json.get("message", "").strip()
     if not user_input:
         return jsonify({"reply": "No input provided."}), 400
 
+    backend_url = "https://chatbot.yashwanthreddyportfolio.me/api/chat"
     start_time = time.time()
 
     try:
         vm_response = requests.post(
-            "https://chatbot.yashwanthreddyportfolio.me/api/chat",
+            backend_url,
             json={"message": user_input},
             headers={"Content-Type": "application/json"},
             timeout=180
         )
 
-        logging.info(f"[DEBUG] Status code: {vm_response.status_code}")
-        logging.info(f"[DEBUG] Time taken: {time.time() - start_time:.2f}s")
+        duration = time.time() - start_time
+        logging.info(f"[DEBUG] Backend status: {vm_response.status_code}, Time: {duration:.2f}s")
 
-        # Try to return JSON regardless of status
+        # Parse backend response safely
         try:
             return jsonify(vm_response.json())
-        except Exception as parse_err:
-            logging.error(f"[ERROR] Could not parse JSON: {parse_err}")
-            logging.debug(f"[DEBUG] Raw backend response: {vm_response.text[:500]}")
-            return jsonify({"reply": "Backend responded with unreadable format."}), 502
+        except Exception as json_error:
+            logging.error(f"[ERROR] Failed to parse JSON from backend: {json_error}")
+            logging.debug(f"[DEBUG] Raw response: {vm_response.text[:300]}")
+            return jsonify({"reply": "The assistant responded in an unexpected format."}), 502
 
     except requests.exceptions.Timeout:
-        logging.error("[ERROR] Backend request timed out.")
-        return jsonify({"reply": "Chatbot backend timed out. Please try again later."}), 504
+        logging.error("[TIMEOUT] Chatbot backend took too long to respond.")
+        return jsonify({"reply": "The assistant timed out. Please try again shortly."}), 504
 
     except requests.exceptions.ConnectionError:
-        logging.error("[ERROR] Backend connection failed.")
-        return jsonify({"reply": "Chatbot backend is unreachable. Please try again shortly."}), 503
+        logging.error("[CONNECTION ERROR] Chatbot backend is unreachable.")
+        return jsonify({"reply": "The assistant is currently unavailable. Please try again later."}), 503
 
     except Exception as e:
-        logging.error(f"[ERROR] Unexpected error: {e}")
-        return jsonify({"reply": "Unexpected error occurred while processing your request."}), 500
+        logging.exception(f"[UNEXPECTED ERROR] {e}")
+        return jsonify({"reply": "An internal error occurred. Please try again later."}), 500
 
-# ---------- Local Dev Runner ----------
+# ---------- Dev Runner ----------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
