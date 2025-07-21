@@ -49,7 +49,7 @@ def chat_proxy():
             "https://chatbot.yashwanthreddyportfolio.me/api/chat",
             json={"message": user_input},
             headers={"Content-Type": "application/json"},
-            timeout=30
+            timeout=180
         )
         vm_response.raise_for_status()
         return jsonify(vm_response.json())
